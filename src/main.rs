@@ -16,6 +16,7 @@ fn jiggle_mouse(is_running: Arc<Mutex<bool>>) {
         thread::sleep(Duration::from_millis(300));
 
         let new_pos = enigo.location().unwrap();
+        // Check the see if the user is moving the cursor by checking to see if the position after being moved is +/- 6 pixels from the original position
         if ((new_pos.0 - 6)..=(new_pos.0 + 6)).contains(&pos.0) && ((new_pos.1 - 6)..=(new_pos.1 + 6)).contains(&pos.1) {
             enigo.move_mouse(pos.0+1,pos.1+1, Coordinate::Abs).unwrap();
         }
@@ -30,6 +31,7 @@ fn main() {
 
     let is_jiggling = Arc::new(Mutex::new(false));
 
+    // Add "Jiggle" menu Item
     let is_jiggling_clone = Arc::clone(&is_jiggling);
     tray.add_menu_item("Jiggle", move || {
         let mut running = is_jiggling_clone.lock().unwrap();
@@ -40,6 +42,7 @@ fn main() {
         }
     }).unwrap();
 
+    // Add "No Jiggle" menu Item
     let is_jiggling_clone = Arc::clone(&is_jiggling);
     tray.add_menu_item("No Jiggle", move || {
         let mut running = is_jiggling_clone.lock().unwrap();
