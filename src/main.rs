@@ -28,8 +28,6 @@ fn jiggle_mouse(is_running: Arc<Mutex<bool>>) {
 }
 
 fn callback(event: Event, is_jiggling: &Arc<Mutex<bool>>) {
-    println!("{:?}", event);
-
     static mut CTRL_PRESSED: bool = false;
     static mut ALT_PRESSED: bool = false;
 
@@ -42,12 +40,10 @@ fn callback(event: Event, is_jiggling: &Arc<Mutex<bool>>) {
 
                     let mut running = is_jiggling.lock().unwrap();
                     if !*running {
-                        println!("Jiggle");
                         *running = true;
                         let is_jiggling_clone = Arc::clone(&is_jiggling);
                         thread::spawn(move || jiggle_mouse(is_jiggling_clone));
                     } else {
-                        println!("No Jiggle");
                         *running = false;
                     }
                 }
@@ -94,7 +90,6 @@ fn main() {
 
     // Start listening for key events
     let is_jiggling_clone = Arc::clone(&is_jiggling);
-    println!("Listening for key events...");
     if let Err(error) = listen(move |event| callback(event, &is_jiggling_clone)) {
         eprintln!("Error: {:?}", error);
     }
