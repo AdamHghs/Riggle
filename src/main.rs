@@ -3,6 +3,7 @@ use tray_item::{TrayItem, IconSource};
 use std::sync::{Arc, Mutex};
 use std::{thread, time::Duration};
 use enigo::{Enigo, Mouse, Settings, Coordinate};
+use rdev::{listen, Event, EventType, Key};
 
 fn jiggle_mouse(is_running: Arc<Mutex<bool>>) {
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
@@ -25,10 +26,43 @@ fn jiggle_mouse(is_running: Arc<Mutex<bool>>) {
         thread::sleep(Duration::from_secs(2));
     }
 }
+
+fn callback(event: Event, is_jiggling: &Arc<Mutex<bool>>) {
+    static mut CTRL_PRESSED: bool = false;
+    static mut ALT_PRESSED: bool = false;
+
+    unsafe {
+        match event.event_type {
+            EventType::KeyPress(key) => match key {
+                Key::ControlLeft | Key::ControlRight => CTRL_PRESSED = true,
+                Key::Alt | Key::AltGr => ALT_PRESSED = true,
+                Key:: KeyJ if CTRL_PRESSED && ALT_PRESSED => {
+
+                    let mut running = is_jiggling.lock().unwrap();
+                    if !*running {
+                        *running = true;
+                        let is_jiggling_clone = Arc::clone(&is_jiggling);
+                        thread::spawn(move || jiggle_mouse(is_jiggling_clone));
+                    } else {
+                        *running = false;
+                    }
+                }
+                _ => {}
+            },
+            EventType::KeyRelease(key) => match key {
+                Key::ControlLeft | Key::ControlRight => CTRL_PRESSED = false,
+                Key::Alt | Key::AltGr => ALT_PRESSED = false,
+                _ => {}
+            },
+            _ => {}
+        }
+
+    }
+}
+
 fn main() {
     // Create a new TrayItem with a title and an icon
     let mut tray = TrayItem::new("Riggle", IconSource::Resource("tray-default")).unwrap();
-
     let is_jiggling = Arc::new(Mutex::new(false));
 
     // Add "Jiggle" menu Item
@@ -53,6 +87,12 @@ fn main() {
     tray.add_menu_item("Quit", move || {
         std::process::exit(0);
     }).unwrap();
+
+    // Start listening for key events
+    let is_jiggling_clone = Arc::clone(&is_jiggling);
+    if let Err(error) = listen(move |event| callback(event, &is_jiggling_clone)) {
+        eprintln!("Error: {:?}", error);
+    }
 
     // Keep the main thread alive
     loop {
