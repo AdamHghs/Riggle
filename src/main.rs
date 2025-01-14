@@ -26,12 +26,12 @@ fn jiggle_mouse(is_running: Arc<Mutex<bool>>) {
 }
 fn main() {
     // Create a new TrayItem with a title and an icon
-    let mut tray = TrayItem::new("Jiggler", IconSource::Resource("tray-default")).unwrap();
+    let mut tray = TrayItem::new("Riggle", IconSource::Resource("tray-default")).unwrap();
 
     let is_jiggling = Arc::new(Mutex::new(false));
 
     let is_jiggling_clone = Arc::clone(&is_jiggling);
-    tray.add_menu_item("Start Jiggle", move || {
+    tray.add_menu_item("Jiggle", move || {
         let mut running = is_jiggling_clone.lock().unwrap();
         if !*running {
             *running = true;
@@ -41,7 +41,7 @@ fn main() {
     }).unwrap();
 
     let is_jiggling_clone = Arc::clone(&is_jiggling);
-    tray.add_menu_item("Stop Jiggle", move || {
+    tray.add_menu_item("No Jiggle", move || {
         let mut running = is_jiggling_clone.lock().unwrap();
         *running = false;
     }).unwrap();

@@ -1,6 +1,6 @@
 # Riggle
 
-Rusty Wiggle is a lightweight Rust application that prevents your computer from going idle by simulating periodic mouse movements. The application runs as a tray icon in your system tray and provides an easy-to-use menu to start and stop the mouse jiggle functionality.
+Riggle is a lightweight Rust application that prevents your computer from going idle by simulating periodic mouse movements. The application runs as a tray icon in your system tray and provides an easy-to-use menu to start and stop the mouse jiggle functionality.
 
 ## Features
 
@@ -16,21 +16,6 @@ Rusty Wiggle is a lightweight Rust application that prevents your computer from 
    - **Stop Jiggle**: Stops the jiggle function.
    - **Quit**: Exits the application.
 
-## Contributing
-
-Contributions are welcome! If you have ideas for new features or optimizations:
-
-1. Fork the repository.
-2. Create a new branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add feature-name"
-   ```
-4. Push the branch and open a pull request.
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
@@ -38,9 +23,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Acknowledgments
 
 - Powered by the `tray-item` and `enigo` crates.
-- Icon design inspired by the creativity of the Rust and tech community.
 
 ---
 
-Keep your computer awake with Rusty Wiggle! 🐭
+Keep your computer awake with Riggle!
 
